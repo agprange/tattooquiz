@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>What Kind of Tattoo Should You Get?</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #E5E9E1;
+            color: #290807;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        header {
+            background-color: #290807;
+            color: #E5E9E1;
+            width: 100%;
+            padding: 20px;
+            text-align: center;
+            font-size: 2em;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #D0D5CE;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.2em;
+            margin-bottom: 20px;
+            color: #290807;
+        }
+
+        p {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            color: #57623A;
+        }
+
+        /* Options Buttons */
+        .options {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .options button {
+            background-color: #6E8668;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1em;
+            width: 80%;
+            max-width: 400px;
+            transition: all 0.3s ease;
+        }
+
+        .options button:hover {
+            background-color: #73A1A2;
+            transform: scale(1.05);
+        }
+
+        /* Progress Bar */
+        #progress {
+            width: 100%;
+            background-color: #E5E9E1;
+            margin-top: 20px;
+        }
+
+        #progress-bar {
+            width: 0%;
+            height: 10px;
+            background-color: #6E8668;
+            transition: width 0.3s ease;
+        }
+
+        /* Result Section */
+        #result {
+            display: none;
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .tattoo-type, .tattoo-style, .tattoo-size {
+            font-weight: bold;
+            color: #290807;
+        }
+
+        img {
+            max-width: 250px;
+            border-radius: 15px;
+            margin-top: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Restart Button */
+        #result button {
+            margin-top: 20px;
+            background-color: #290807;
+            color: #E5E9E1;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #result button:hover {
+            background-color: #6E8668;
+        }
+    </style>
+</head>
+<body>
+    <header>What Kind of Tattoo Should You Get?</header>
+
+    <div id="quiz" class="container">
+        <h1>Answer the Questions</h1>
+        <div id="progress">
+            <div id="progress-bar"></div>
+        </div>
+        <p id="question"></p>
+        <div id="options" class="options"></div>
+    </div>
+
+    <div id="result" class="container">
+        <h1>Your Tattoo Recommendation</h1>
+        <p>You should get a <span class="tattoo-type"></span> tattoo in <span class="tattoo-style"></span> style!</p>
+        <p>The ideal size for your tattoo is <span class="tattoo-size"></span>.</p>
+        <img id="tattoo-image" alt="Tattoo Preview">
+        <button onclick="restart()">Take the Quiz Again</button>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                text: "What inspires you the most?",
+                options: ["Nature and the outdoors", "Animals and their symbolism", "Technology and futuristic concepts", "Words and meaningful quotes"],
+                themes: ["nature", "animal", "cyber", "quotes"]
+            },
+            {
+                text: "What best describes your personality?",
+                options: ["Calm and grounded", "Adventurous and spirited", "Analytical and innovative", "Thoughtful and introspective"],
+                themes: ["nature", "animal", "cyber", "quotes"]
+            },
+            {
+                text: "Which type of artwork catches your eye?",
+                options: ["Scenic landscapes", "Wildlife photography", "Futuristic designs", "Calligraphy or typography"],
+                themes: ["nature", "animal", "cyber", "quotes"]
+            },
+            {
+                text: "What do you want your tattoo to symbolize?",
+                options: ["Growth and connection", "Strength and freedom", "Progress and innovation", "Inspiration and wisdom"],
+                themes: ["nature", "animal", "cyber", "quotes"]
+            },
+            {
+                text: "What’s your preferred aesthetic?",
+                options: ["Minimalist and clean", "Bold and dramatic", "Abstract and unique", "Detailed and realistic"],
+                styles: ["minimalist", "bold", "abstract", "realistic"]
+            },
+            {
+                text: "What do you feel most connected to?",
+                options: ["Mountains, forests, or oceans", "A specific animal or pet", "Technology and modern design", "Words that carry deep meaning"],
+                themes: ["nature", "animal", "cyber", "quotes"]
+            },
+            {
+                text: "Do you want your tattoo to tell a story?",
+                options: ["Yes, about my connection to nature", "Yes, about my spirit or an animal I relate to", "Yes, about my fascination with the future", "Yes, through a phrase or quote"],
+                themes: ["nature", "animal", "cyber", "quotes"]
+            },
+            {
+                text: "Where would you like your tattoo to be placed?",
+                options: ["Arm or leg", "Shoulder or back", "Wrist or neck", "Forearm or chest"]
+            },
+            {
+                text: "Which colors appeal to you most for a tattoo?",
+                options: ["Earthy tones like green and brown", "Natural shades like black, gray, or gold", "Neon or metallic hues", "Simple black or subtle grayscale"]
+            },
+            {
+                text: "What type of tattoo feels more timeless to you?",
+                options: ["Something inspired by nature’s beauty", "An animal with personal meaning", "Futuristic symbols or patterns", "A profound quote or phrase"],
+                themes: ["nature", "animal", "cyber", "quotes"]
+            },
+            {
+                text: "How much detail do you want in your tattoo?",
+                options: ["Some details, but nothing too busy", "Lots of intricate details", "Clean lines with occasional detailing", "A mix of clean and expressive"],
+                styles: ["minimalist", "realistic", "abstract", "bold"]
+            },
+            {
+                text: "What vibe do you want your tattoo to give off?",
+                options: ["Peaceful and serene", "Energetic and wild", "Edgy and futuristic", "Wise and reflective"]
+            },
+            {
+                text: "If you could have a power, which would it be?",
+                options: ["Communicating with nature", "Transforming into an animal", "Controlling technology", "Speaking profound wisdom"],
+                themes: ["nature", "animal", "cyber", "quotes"]
+            },
+            {
+                text: "Do you like futuristic designs?",
+                options: ["No, I prefer classic styles", "Some, but I prefer organic elements", "Yes, absolutely", "Only if paired with words"],
+                themes: ["nature", "animal", "cyber", "quotes"]
+            },
+            {
+                text: "What tattoo size do you prefer?",
+                options: ["Small and delicate", "Medium-sized and striking", "Large and detailed"],
+                sizes: ["small", "medium", "large"]
+            }
+        ];
+
+        let currentQuestion = 0;
+        let themeCount = { nature: 0, animal: 0, cyber: 0, quotes: 0 };
+        let styleCount = { minimalist: 0, bold: 0, abstract: 0, realistic: 0 };
+        let size = "";
+
+        const images = {
+            nature: { minimalist: 'nature_minimalist.jpg', bold: 'nature_bold.jpg', abstract: 'nature_abstract.jpg', realistic: 'nature_realistic.jpg' },
+            animal: { minimalist: 'animal_minimalist.png', bold: 'animal_bold.jpg', abstract: 'animal_abstract.jpg', realistic: 'animal_realistic.jpg' },
+            cyber: { minimalist: 'cyber_minimalist.jpg', bold: 'cyber_bold.jpg', abstract: 'cyber_abstract.jpg', realistic: 'cyber_realistic.jpg' },
+            quotes: { minimalist: 'quotes_minimalist.jpg', bold: 'quotes_bold.jpg', abstract: 'quotes_abstract.jpg', realistic: 'quotes_realistic.jpg' }
+        };
+
+        const questionEl = document.getElementById("question");
+        const optionsEl = document.getElementById("options");
+        const resultEl = document.getElementById("result");
+        const progressBar = document.getElementById("progress-bar");
+
+        function loadQuestion() {
+            if (currentQuestion < questions.length) {
+                const question = questions[currentQuestion];
+                questionEl.textContent = question.text;
+                optionsEl.innerHTML = '';
+                question.options.forEach((option, index) => {
+                    const button = document.createElement("button");
+                    button.textContent = option;
+                    button.onclick = () => selectOption(index);
+                    optionsEl.appendChild(button);
+                });
+                updateProgressBar();
+            } else {
+                displayResult();
+            }
+        }
+
+        function selectOption(index) {
+            const question = questions[currentQuestion];
+            if (question.themes) themeCount[question.themes[index]]++;
+            if (question.styles) styleCount[question.styles[index]]++;
+            if (question.sizes) size = question.sizes[index];
+            currentQuestion++;
+            loadQuestion();
+        }
+
+        function displayResult() {
+            const theme = Object.keys(themeCount).reduce((a, b) => (themeCount[a] >= themeCount[b] ? a : b));
+            const style = Object.keys(styleCount).reduce((a, b) => (styleCount[a] >= styleCount[b] ? a : b));
+
+            document.querySelector(".tattoo-type").textContent = theme;
+            document.querySelector(".tattoo-style").textContent = style;
+            document.querySelector(".tattoo-size").textContent = size || "medium";
+
+            const imageSrc = images[theme][style];
+            document.getElementById("tattoo-image").src = imageSrc ? imageSrc : 'default_tattoo.jpg';
+
+            document.getElementById("quiz").style.display = "none";
+            resultEl.style.display = "block";
+        }
+
+        function restart() {
+            currentQuestion = 0;
+            themeCount = { nature: 0, animal: 0, cyber: 0, quotes: 0 };
+            styleCount = { minimalist: 0, bold: 0, abstract: 0, realistic: 0 };
+            size = "";
+            resultEl.style.display = "none";
+            document.getElementById("quiz").style.display = "block";
+            loadQuestion();
+        }
+
+        function updateProgressBar() {
+            const progressPercent = ((currentQuestion) / questions.length) * 100;
+            progressBar.style.width = progressPercent + '%';
+        }
+
+        loadQuestion();
+    </script>
+</body>
+</html>
